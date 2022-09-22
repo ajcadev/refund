@@ -18,6 +18,7 @@ export const globalStyles = globalCss({
     backgroundColor: '$base-background',
     color: '$base-text',
     '-webkit-font-smoothing': 'antialiased',
+    font: '400 1rem Roboto, sans-serif',
   },
   
   'img, picture, video, canvas, svg': {
