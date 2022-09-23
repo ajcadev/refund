@@ -117,6 +117,7 @@ export function NewRefundModal(){
             <Input
               id="amount"
               type="number"
+              step="0.01"
               placeholder='Valor'
               required
               {...register('amount', { valueAsNumber: true })}
