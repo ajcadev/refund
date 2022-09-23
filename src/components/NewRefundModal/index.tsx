@@ -4,7 +4,7 @@ import { SelectContent, SelectIcon, SelectItem, SelectItemIndicator, SelectItemT
 import { Fieldset, Flex, Input, Label, SubmitButton } from "./styles";
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 const newRefundFormSchema = z.object({
   event: z.string(),
@@ -17,13 +17,17 @@ type NewRefundFormInputs = z.infer<typeof newRefundFormSchema>;
 
 export function NewRefundModal(){
   const {
+    control,
     register,
     handleSubmit,
     formState: { isSubmitting },
     reset,
     setValue
   } = useForm<NewRefundFormInputs>({
-    resolver: zodResolver(newRefundFormSchema)
+    resolver: zodResolver(newRefundFormSchema),
+    defaultValues: {
+      event: '1827'
+    }
   })
 
   async function handleCreateNewRefund(data: NewRefundFormInputs) {
@@ -41,44 +45,52 @@ export function NewRefundModal(){
         <form onSubmit={handleSubmit(handleCreateNewRefund)}>
           <Fieldset>
             <Label htmlFor="event">Evento</Label>
-            <SelectRoot {...(register("event", {required: true}), { onValueChange: (value) => {setValue("event", value);}})}>
-              <SelectTrigger id="event" aria-label="Event">
-                <SelectValue placeholder="Selecione um evento…" />
-                <SelectIcon>
-                  <ChevronDownIcon />
-                </SelectIcon>
-              </SelectTrigger>
-              <SelectPortal>
-                <SelectContent>
-                  <SelectScrollUpButton>
-                    <ChevronUpIcon />
-                  </SelectScrollUpButton>
-                  <SelectViewport>
-                    <SelectItem value="1828">
-                      <SelectItemText>Creche</SelectItemText>
-                      <SelectItemIndicator>
-                        <CheckIcon />
-                      </SelectItemIndicator>
-                    </SelectItem>
-                    <SelectItem value="1827">
-                      <SelectItemText>Médico</SelectItemText>
-                      <SelectItemIndicator>
-                        <CheckIcon />
-                      </SelectItemIndicator>
-                    </SelectItem>
-                    <SelectItem value="1966">
-                      <SelectItemText>Odonto</SelectItemText>
-                      <SelectItemIndicator>
-                        <CheckIcon />
-                      </SelectItemIndicator>
-                    </SelectItem>
-                  </SelectViewport>
-                  <SelectScrollDownButton>
-                    <ChevronDownIcon />
-                  </SelectScrollDownButton>
-                </SelectContent>
-              </SelectPortal>
-            </SelectRoot>
+            <Controller
+              control={control}
+              name="event"
+              render={({ field }) => {
+                return (
+                  <SelectRoot onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger id="event" aria-label="Event">
+                      <SelectValue placeholder="Selecione um evento…" />
+                      <SelectIcon>
+                        <ChevronDownIcon />
+                      </SelectIcon>
+                    </SelectTrigger>
+                    <SelectPortal>
+                      <SelectContent>
+                        <SelectScrollUpButton>
+                          <ChevronUpIcon />
+                        </SelectScrollUpButton>
+                        <SelectViewport>
+                          <SelectItem value="1828">
+                            <SelectItemText>Creche</SelectItemText>
+                            <SelectItemIndicator>
+                              <CheckIcon />
+                            </SelectItemIndicator>
+                          </SelectItem>
+                          <SelectItem value="1827">
+                            <SelectItemText>Médico</SelectItemText>
+                            <SelectItemIndicator>
+                              <CheckIcon />
+                            </SelectItemIndicator>
+                          </SelectItem>
+                          <SelectItem value="1966">
+                            <SelectItemText>Odonto</SelectItemText>
+                            <SelectItemIndicator>
+                              <CheckIcon />
+                            </SelectItemIndicator>
+                          </SelectItem>
+                        </SelectViewport>
+                        <SelectScrollDownButton>
+                          <ChevronDownIcon />
+                        </SelectScrollDownButton>
+                      </SelectContent>
+                    </SelectPortal>
+                  </SelectRoot>
+                )
+              }}
+            />
           </Fieldset>
           <Fieldset>
             <Label htmlFor="numberDoc">Número</Label>
