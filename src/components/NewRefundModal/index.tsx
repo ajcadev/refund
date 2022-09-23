@@ -1,20 +1,47 @@
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon, Cross2Icon } from "@radix-ui/react-icons";
-import { Button } from "../../styles/UI/Button";
 import { DialogClose, DialogContent, DialogDescription, DialogIconButton, DialogOverlay, DialogPortal, DialogTitle } from "../../styles/UI/Dialog";
 import { SelectContent, SelectIcon, SelectItem, SelectItemIndicator, SelectItemText, SelectPortal, SelectRoot, SelectScrollDownButton, SelectScrollUpButton, SelectTrigger, SelectValue, SelectViewport } from "../../styles/UI/Select";
-import { Fieldset, Flex, Input, Label } from "./styles";
+import { Fieldset, Flex, Input, Label, SubmitButton } from "./styles";
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
+const newRefundFormSchema = z.object({
+  event: z.string(),
+  numberDoc: z.string(),
+  issueDate: z.date(),
+  amount: z.number(),
+});
+
+type NewRefundFormInputs = z.infer<typeof newRefundFormSchema>;
 
 export function NewRefundModal(){
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+    reset,
+    setValue
+  } = useForm<NewRefundFormInputs>({
+    resolver: zodResolver(newRefundFormSchema)
+  })
+
+  async function handleCreateNewRefund(data: NewRefundFormInputs) {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    console.log(data);
+    reset()
+  }
+
   return(
     <DialogPortal>
       <DialogOverlay />
       <DialogContent>
         <DialogTitle>Novo reembolso</DialogTitle>
         <DialogDescription>Adicione um novo reembolso e aguarde nosso feedback.</DialogDescription>
-        <form action="">
+        <form onSubmit={handleSubmit(handleCreateNewRefund)}>
           <Fieldset>
             <Label htmlFor="event">Evento</Label>
-            <SelectRoot>
+            <SelectRoot {...(register("event", {required: true}), { onValueChange: (value) => {setValue("event", value);}})}>
               <SelectTrigger id="event" aria-label="Event">
                 <SelectValue placeholder="Selecione um evento…" />
                 <SelectIcon>
@@ -60,6 +87,7 @@ export function NewRefundModal(){
               type="text"
               placeholder='Número do documento'
               required
+              {...register('numberDoc')}
             />
           </Fieldset>
           <Fieldset>
@@ -69,19 +97,21 @@ export function NewRefundModal(){
               type="date"
               placeholder='Emissão'
               required
+              {...register('issueDate', { valueAsDate: true })}
             />
           </Fieldset>
           <Fieldset>
-            <Label htmlFor="value">Valor</Label>
+            <Label htmlFor="amount">Valor</Label>
             <Input
-              id="value"
+              id="amount"
               type="number"
               placeholder='Valor'
               required
+              {...register('amount', { valueAsNumber: true })}
             />
           </Fieldset>
           <Flex css={{ marginTop: 25, justifyContent: 'flex-end' }}>
-            <Button type="submit" variant="green">Salvar</Button>
+            <SubmitButton type="submit" disabled={isSubmitting} variant="green">Salvar</SubmitButton>
           </Flex>
         </form>
         <DialogClose asChild>

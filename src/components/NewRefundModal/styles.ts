@@ -1,4 +1,5 @@
 import { styled } from "../../styles";
+import { Button } from "../../styles/UI/Button";
 
 export const Flex = styled('div', { display: 'flex' });
 
@@ -38,3 +39,19 @@ export const Input = styled('input', {
     boxShadow: '0 0 0 2px $$shadow'
   },
 });
+
+export const SubmitButton = styled(Button, {
+  '&[type="submit"]': {
+    '&:disabled': {
+      opacity: 0.6,
+      cursor: 'not-allowed',
+    },
+
+    '&:not(:disabled):hover': {
+      transition: 'backgroundColor 0.2s',
+    }
+
+
+
+  }
+})
