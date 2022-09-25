@@ -6,11 +6,13 @@ import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 
+const MAXDAYSTOREQUESTREFUND = 45 
+const lowerDeadline = new Date((new Date()).setDate((new Date()).getDate()-MAXDAYSTOREQUESTREFUND))
 const newRefundFormSchema = z.object({
-  event: z.string(),
-  numberDoc: z.string(),
-  issueDate: z.date(),
-  amount: z.number(),
+  event: z.string().min(1, 'Informe o evento'),
+  numberDoc: z.string().min(1, 'Informe o número do documento'),
+  issueDate: z.date().min(lowerDeadline, `Documento fora do prazo de ${MAXDAYSTOREQUESTREFUND}`).max(new Date(), 'Data posterior à data atual'),
+  amount: z.number().positive('Informe um valor maior que 0'),
 });
 
 type NewRefundFormInputs = z.infer<typeof newRefundFormSchema>;
@@ -20,7 +22,7 @@ export function NewRefundModal(){
     control,
     register,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     reset,
     setValue
   } = useForm<NewRefundFormInputs>({
@@ -35,6 +37,8 @@ export function NewRefundModal(){
     console.log(data);
     reset()
   }
+
+  console.log(errors)
 
   return(
     <DialogPortal>
@@ -136,3 +140,4 @@ export function NewRefundModal(){
     </DialogPortal>
   )
 }
+
