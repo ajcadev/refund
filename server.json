@@ -1,0 +1,19 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "event": "1827",
+      "description": "Médico"
+    },
+    {
+      "id": 2,
+      "event": "1828",
+      "description": "Creche"
+    },
+    {
+      "id": 3,
+      "event": "1966",
+      "description": "Odonto"
+    }
+  ]
+}
