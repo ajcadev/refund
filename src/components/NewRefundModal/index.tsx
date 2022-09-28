@@ -1,44 +1,60 @@
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { DialogClose, DialogContent, DialogDescription, DialogIconButton, DialogOverlay, DialogPortal, DialogTitle } from "../../styles/UI/Dialog";
 import { SelectContent, SelectIcon, SelectItem, SelectItemIndicator, SelectItemText, SelectPortal, SelectRoot, SelectScrollDownButton, SelectScrollUpButton, SelectTrigger, SelectValue, SelectViewport } from "../../styles/UI/Select";
-import { Fieldset, Flex, Input, Label, SubmitButton } from "./styles";
-import * as z from 'zod';
+import { FormRefund, Input, Label, SubmitButton } from "./styles";
+import { z } from 'zod';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm } from 'react-hook-form';
 
 const MAXDAYSTOREQUESTREFUND = 45 
 const lowerDeadline = new Date((new Date()).setDate((new Date()).getDate()-MAXDAYSTOREQUESTREFUND))
-const newRefundFormSchema = z.object({
+
+
+const NoDependentSchema = z.object({
   event: z.string().min(1, 'Informe o evento'),
   numberDoc: z.string().min(1, 'Informe o número do documento'),
   issueDate: z.date().min(lowerDeadline, `Documento fora do prazo de ${MAXDAYSTOREQUESTREFUND}`).max(new Date(), 'Data posterior à data atual'),
   amount: z.number().positive('Informe um valor maior que 0'),
-});
+  isDependent: z.literal(false),  
+})
 
-type NewRefundFormInputs = z.infer<typeof newRefundFormSchema>;
+const DependentSchema = z.object({
+  event: z.string().min(1, 'Informe o evento'),
+  numberDoc: z.string().min(1, 'Informe o número do documento'),
+  issueDate: z.date().min(lowerDeadline, `Documento fora do prazo de ${MAXDAYSTOREQUESTREFUND}`).max(new Date(), 'Data posterior à data atual'),
+  amount: z.number().positive('Informe um valor maior que 0'),
+  isDependent: z.literal(true),
+  dependent: z.string().min(1, 'Informe o dependente'),  
+})
+
+const newRefundFormSchema = z.discriminatedUnion("isDependent", [
+  NoDependentSchema,
+  DependentSchema
+])
+
+type NewRefundFormSchemaType = z.infer<typeof newRefundFormSchema>;
 
 export function NewRefundModal(){
   const {
-    control,
     register,
     handleSubmit,
+    watch,
+    control,
     formState: { isSubmitting, errors },
-    reset,
-    setValue
-  } = useForm<NewRefundFormInputs>({
+    reset  } = useForm<NewRefundFormSchemaType>({
     resolver: zodResolver(newRefundFormSchema),
     defaultValues: {
       event: '1827'
     }
   })
 
-  async function handleCreateNewRefund(data: NewRefundFormInputs) {
+  async function handleCreateNewRefund(data: NewRefundFormSchemaType) {
     await new Promise(resolve => setTimeout(resolve, 2000));
     console.log(data);
     reset()
   }
 
-  console.log(errors)
+  const isDependent = watch('isDependent')
 
   return(
     <DialogPortal>
@@ -46,91 +62,104 @@ export function NewRefundModal(){
       <DialogContent>
         <DialogTitle>Novo reembolso</DialogTitle>
         <DialogDescription>Adicione um novo reembolso e aguarde nosso feedback.</DialogDescription>
-        <form onSubmit={handleSubmit(handleCreateNewRefund)}>
-          <Fieldset>
-            <Label htmlFor="event">Evento</Label>
+        <FormRefund onSubmit={handleSubmit(handleCreateNewRefund)}>
             <Controller
               control={control}
               name="event"
               render={({ field }) => {
                 return (
-                  <SelectRoot onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger id="event" aria-label="Event">
-                      <SelectValue placeholder="Selecione um evento…" />
-                      <SelectIcon>
-                        <ChevronDownIcon />
-                      </SelectIcon>
-                    </SelectTrigger>
-                    <SelectPortal>
-                      <SelectContent>
-                        <SelectScrollUpButton>
-                          <ChevronUpIcon />
-                        </SelectScrollUpButton>
-                        <SelectViewport>
-                          <SelectItem value="1828">
-                            <SelectItemText>Creche</SelectItemText>
-                            <SelectItemIndicator>
-                              <CheckIcon />
-                            </SelectItemIndicator>
-                          </SelectItem>
-                          <SelectItem value="1827">
-                            <SelectItemText>Médico</SelectItemText>
-                            <SelectItemIndicator>
-                              <CheckIcon />
-                            </SelectItemIndicator>
-                          </SelectItem>
-                          <SelectItem value="1966">
-                            <SelectItemText>Odonto</SelectItemText>
-                            <SelectItemIndicator>
-                              <CheckIcon />
-                            </SelectItemIndicator>
-                          </SelectItem>
-                        </SelectViewport>
-                        <SelectScrollDownButton>
+                  <Label>
+                    <span>Evento</span>
+                    <SelectRoot onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger aria-label="Event">
+                        <SelectValue placeholder="Selecione um evento…" />
+                        <SelectIcon>
                           <ChevronDownIcon />
-                        </SelectScrollDownButton>
-                      </SelectContent>
-                    </SelectPortal>
-                  </SelectRoot>
+                        </SelectIcon>
+                      </SelectTrigger>
+                      <SelectPortal>
+                        <SelectContent>
+                          <SelectScrollUpButton>
+                            <ChevronUpIcon />
+                          </SelectScrollUpButton>
+                          <SelectViewport>
+                            <SelectItem value="1828">
+                              <SelectItemText>Creche</SelectItemText>
+                              <SelectItemIndicator>
+                                <CheckIcon />
+                              </SelectItemIndicator>
+                            </SelectItem>
+                            <SelectItem value="1827">
+                              <SelectItemText>Médico</SelectItemText>
+                              <SelectItemIndicator>
+                                <CheckIcon />
+                              </SelectItemIndicator>
+                            </SelectItem>
+                            <SelectItem value="1966">
+                              <SelectItemText>Odonto</SelectItemText>
+                              <SelectItemIndicator>
+                                <CheckIcon />
+                              </SelectItemIndicator>
+                            </SelectItem>
+                          </SelectViewport>
+                          <SelectScrollDownButton>
+                            <ChevronDownIcon />
+                          </SelectScrollDownButton>
+                        </SelectContent>
+                      </SelectPortal>
+                    </SelectRoot>
+                  </Label>
                 )
               }}
             />
-          </Fieldset>
-          <Fieldset>
-            <Label htmlFor="numberDoc">Número</Label>
-            <Input
-              id="numberDoc"
-              type="text"
-              placeholder='Número do documento'
-              required
-              {...register('numberDoc')}
-            />
-          </Fieldset>
-          <Fieldset>
-            <Label htmlFor="issueDate">Emissão</Label>
-            <Input
-              id="issueDate"
-              type="date"
-              placeholder='Emissão'
-              required
-              {...register('issueDate', { valueAsDate: true })}
-            />
-          </Fieldset>
-          <Fieldset>
-            <Label htmlFor="amount">Valor</Label>
-            <Input
-              id="amount"
-              type="number"
-              step="0.01"
-              placeholder='Valor'
-              required
-              {...register('amount', { valueAsNumber: true })}
-            />
-          </Fieldset>
-          <Flex css={{ marginTop: 25, justifyContent: 'flex-end' }}>
+            <Label>
+              <span>Número do documento</span>
+              <Input
+                type="text"
+                placeholder='Número do documento'
+                {...register('numberDoc')}
+                aria-invalid={errors.numberDoc ? "true" : "false"} 
+              />
+              {<p role="alert">{errors.numberDoc?.message}</p>}
+            </Label>
+            <Label>
+              <span>Data de emissão</span>
+              <Input
+                type="date"
+                placeholder='Emissão'
+                {...register('issueDate', { valueAsDate: true })}
+              />
+              {errors.issueDate && <p>Informe uma data válida</p>}
+            </Label>
+            <Label>
+              <span>Valor</span>
+              <Input
+                type="number"
+                step="0.01"
+                placeholder='Valor'
+                {...register('amount', { valueAsNumber: true })}
+              />
+              {errors.amount && <p>Informe um valor maior que zero.</p>}
+            </Label>
+            <Label variant="checkbox">
+              <Input
+                type="checkbox"
+                {...register('isDependent')}
+              />
+              <span>Despesa é de dependente?</span>
+            </Label>
+            {isDependent && (
+              <Label>
+                <span>Dependente</span>
+                <Input
+                  type="text"
+                  placeholder='Nome do dependente'
+                  {...register('dependent', {shouldUnregister: true})}
+                />
+              </Label>
+            )}
             <SubmitButton type="submit" disabled={isSubmitting} variant="green">Salvar</SubmitButton>
-          </Flex>
-        </form>
+        </FormRefund>
         <DialogClose asChild>
           <DialogIconButton aria-label="Close">
             <Cross2Icon />
@@ -140,4 +169,3 @@ export function NewRefundModal(){
     </DialogPortal>
   )
 }
-

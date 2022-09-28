@@ -24,11 +24,11 @@ export const Button = styled('button', {
         '&:focus': { boxShadow: `0 0 0 2px black` },
       },
       green: {
-        backgroundColor: '$green4',
+        backgroundColor: '$green5',
         color: '$green11',
-        '&:hover': { backgroundColor: '$green5' },
+        '&:hover': { backgroundColor: '$green6' },
         '&:focus': {
-          $$shadow: '$colors$green7', 
+          $$shadow: '$colors$green9', 
           boxShadow: '0 0 0 2px $$shadow'
         },
       },

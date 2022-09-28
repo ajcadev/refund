@@ -15,5 +15,5 @@ export const {
     colors: {
       ...blue, ...green, ...red, ...yellow, ...gray, ...blackA, ...violet
     },
-  }
+  },
 })

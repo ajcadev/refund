@@ -42,13 +42,13 @@ const StyledTitle = styled(DialogPrimitive.Title, {
   margin: 0,
   fontWeight: 500,
   color: '$gray12',
-  fontSize: 17,
+  fontSize: '1.0625rem',
 });
 
 const StyledDescription = styled(DialogPrimitive.Description, {
   margin: '10px 0 20px',
   color: '$gray11',
-  fontSize: 15,
+  fontSize: '0.9375rem',
   lineHeight: 1.5,
 });
 

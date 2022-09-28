@@ -5,17 +5,15 @@ const StyledTrigger = styled(SelectPrimitive.SelectTrigger, {
   all: 'unset',
   display: 'inline-flex',
   alignItems: 'center',
-  justifyContent: 'center',
   borderRadius: 4,
   padding: '0 15px',
-  fontSize: 13,
   lineHeight: 1,
   height: 35,
   gap: 5,
   backgroundColor: 'white',
   color: '$violet11',
   $$shadow: '$colors$blackA7',
-  boxShadow: '0 2px 10px $$shadow',
+  boxShadow: '0 1px 8px $$shadow',
   '&:hover': { backgroundColor: '$gray3' },
   '&:focus': { boxShadow: `0 0 0 2px black` },
   '&[data-placeholder]': { color: '$violet9' },
@@ -29,8 +27,7 @@ const StyledContent = styled(SelectPrimitive.Content, {
   overflow: 'hidden',
   backgroundColor: 'white',
   borderRadius: 6,
-  boxShadow:
-    '0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)',
+  boxShadow: '0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)',
 });
 
 const StyledViewport = styled(SelectPrimitive.Viewport, {
@@ -39,7 +36,6 @@ const StyledViewport = styled(SelectPrimitive.Viewport, {
 
 const StyledItem = styled(SelectPrimitive.Item, {
   all: 'unset',
-  fontSize: 13,
   lineHeight: 1,
   color: '$violet11',
   borderRadius: 3,
@@ -63,8 +59,7 @@ const StyledItem = styled(SelectPrimitive.Item, {
 
 const StyledLabel = styled(SelectPrimitive.Label, {
   padding: '0 25px',
-  fontSize: 12,
-  lineHeight: '25px',
+  lineHeight: '1.5625rem',
   color: '$gray11',
 });
 
