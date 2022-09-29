@@ -34,7 +34,15 @@ const newRefundFormSchema = z.discriminatedUnion("isDependent", [
 
 type NewRefundFormSchemaType = z.infer<typeof newRefundFormSchema>;
 
-export function NewRefundModal(){
+interface NewRefundModalProps {
+  events: {
+    id: number
+    event: string
+    description: string
+  }[]
+}
+
+export function NewRefundModal({ events }: NewRefundModalProps){
   const {
     register,
     handleSubmit,
@@ -56,6 +64,7 @@ export function NewRefundModal(){
 
   const isDependent = watch('isDependent')
 
+  console.log(events)
   return(
     <DialogPortal>
       <DialogOverlay />
@@ -83,24 +92,16 @@ export function NewRefundModal(){
                             <ChevronUpIcon />
                           </SelectScrollUpButton>
                           <SelectViewport>
-                            <SelectItem value="1828">
-                              <SelectItemText>Creche</SelectItemText>
-                              <SelectItemIndicator>
-                                <CheckIcon />
-                              </SelectItemIndicator>
-                            </SelectItem>
-                            <SelectItem value="1827">
-                              <SelectItemText>Médico</SelectItemText>
-                              <SelectItemIndicator>
-                                <CheckIcon />
-                              </SelectItemIndicator>
-                            </SelectItem>
-                            <SelectItem value="1966">
-                              <SelectItemText>Odonto</SelectItemText>
-                              <SelectItemIndicator>
-                                <CheckIcon />
-                              </SelectItemIndicator>
-                            </SelectItem>
+                            {events.map(event =>{
+                              return (
+                                <SelectItem key={event.id} value={event.event}>
+                                  <SelectItemText>{event.description}</SelectItemText>
+                                  <SelectItemIndicator>
+                                    <CheckIcon />
+                                  </SelectItemIndicator>
+                                </SelectItem>
+                              )
+                            })}
                           </SelectViewport>
                           <SelectScrollDownButton>
                             <ChevronDownIcon />
