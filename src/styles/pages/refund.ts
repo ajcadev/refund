@@ -13,7 +13,6 @@ export const NewRefundButton = styled(Button, {})
 export const RefundsTable = styled('table', {
   borderCollapse: 'collapse',
   margin: '25px 0',
-  fontSize: '0.9em',
   boxShadow: '0 0 20px rgba(0, 0, 0, 0.15)',
   width: '100%',
   backgroundColor: 'white',
@@ -67,7 +66,23 @@ export const State = styled('span', {
       },
     }
   },
-  defaultVariants: {
-    variant: 'processing',
-  },
+})
+
+export const ButtonIcon = styled('button', {
+  border: 'none',
+  backgroundColor: 'transparent',
+  cursor: 'pointer',
+
+  variants: {
+    variant: {
+      delete: {
+        color: '$red9',
+        '&:hover': { color: '$red11' },
+      },
+      edit: {
+        color: '$blue9',
+        '&:hover': { color: '$blue11' },
+      }
+    }
+  }
 })

@@ -22,7 +22,7 @@ export const FormRefund = styled('form', {
   gap: '1.25rem',
 
   'span': {
-    color: '$violet9',
+    color: '$gray11',
   }
 })
 

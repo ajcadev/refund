@@ -191,7 +191,6 @@ export function NewRefundModal({ events }: NewRefundModalProps){
               />
               {errors.amount && <p>Informe um valor maior que zero.</p>}
             </Label>
-
             <Label>
               <span>Arquivo</span>
               <Input
@@ -220,7 +219,7 @@ export function NewRefundModal({ events }: NewRefundModalProps){
               </Label>
             )}
             {/* <pre>{JSON.stringify(watch())}</pre> */}
-            <SubmitButton type="submit" disabled={isSubmitting} variant="green">Salvar</SubmitButton>
+            <SubmitButton type="submit" disabled={isSubmitting} variant="green">Criar solicitação</SubmitButton>
         </FormRefund>
         <DialogClose asChild>
           <DialogIconButton aria-label="Close">

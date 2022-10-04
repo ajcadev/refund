@@ -1,8 +1,9 @@
 import { GetStaticProps } from "next";
+import { Pencil, Trash } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { NewRefundModal } from "../components/NewRefundModal";
 import { api } from "../services/api";
-import { NewRefundButton, RefundContainer, RefundsTable, State } from "../styles/pages/refund";
+import { ButtonIcon, NewRefundButton, RefundContainer, RefundsTable, State } from "../styles/pages/refund";
 import { DialogRoot, DialogTrigger } from "../styles/UI/Dialog";
 import { dateFormatter, priceFormatter } from "../utils/formatter";
 
@@ -62,11 +63,14 @@ export default function Refund({ events }: RefundProps) {
             <th>valor</th>
             <th>estado</th>
             <th>arquivo</th>
+            <th></th>
+
           </tr>
         </thead>
         <tbody>
           {refunds.length && (
             refunds.map(refund => {
+              console.log(refund.state.state)
               return(
                 <tr key={refund.id}>
                   <td>{refund.period}</td>
@@ -74,8 +78,18 @@ export default function Refund({ events }: RefundProps) {
                   <td>{refund.number_doc}</td>
                   <td>{dateFormatter.format(new Date(refund.issue_date))}</td>
                   <td>{priceFormatter.format(refund.amount)}</td>
-                  <td><State variant={refund.state.state}>{refund.state.state}</State></td>
+                  <td><State variant={refund.state.state}>
+                    {refund.state.state}</State>
+                  </td>
                   <td>{refund.attachment}</td>
+                  <td>
+                    <ButtonIcon variant='edit'>
+                      <Pencil size={16} />
+                    </ButtonIcon>
+                    <ButtonIcon variant="delete">
+                      <Trash size={16} />
+                    </ButtonIcon>
+                  </td>
                 </tr>
               )
             })
