@@ -1,4 +1,31 @@
 {
+  "users": [
+    {
+      "id": "1527c673-4900-462f-81f4-38a58ea76583",
+      "email": "jonhdoe@doe.com",
+      "password": "xpto123",
+      "enrollment": "058800047",
+      "name": "Jonh Doe",
+      "cpf": "57554525042",
+      "date_of_birth": "1970-07-29T19:00:01.154Z",
+      "created_at": "2022-09-29T19:00:01.154Z",
+      "updated_at": "2022-09-29T19:00:01.154Z",
+      "is_active": true
+    },
+    {
+      "id": "fd9348f3-bafc-45aa-9656-12bec09968e8",
+      "email": "janedoe@doe.com",
+      "password": "jane321",
+      "enrollment": "068812347",
+      "name": "Jane Doe",
+      "cpf": "41693561018",
+      "birth_date": "1986-04-23T19:00:01.154Z",
+      "created_at": "2022-09-29T19:11:50.653Z",
+      "updated_at": "2022-09-29T19:11:50.653Z",
+      "is_active": true
+    }
+  ],
+
   "events": [
     {
       "id": 1,
@@ -14,11 +41,60 @@
       "id": 3,
       "event": "1966",
       "description": "Odonto"
+    }
+  ],
+
+  "states": [
+    {
+      "id": 1,
+      "state": "processing"
     },
     {
-      "id": 4,
-      "event": "1970",
-      "description": "Laboratório"
+      "id": 2,
+      "state": "success"
+    },
+    {
+      "id": 3,
+      "state": "failed"
+    }
+  ],
+
+  "refunds": [
+    {
+      "id": "3338c14a-06db-4a49-a408-72054ba28005",
+      "userId": "1527c673-4900-462f-81f4-38a58ea76583",
+      "eventId": 3,
+      "stateId": 1,  
+      "number_doc": "0359",
+      "issue_date": "2022-09-30T19:11:50.653Z",
+      "amount": 650.00,
+      "period": "2022/10",
+      "refund_amount": 390.00,
+      "attachment": "/media/0359.pdf"
+    },
+    {
+      "id": "88ab8586-e68d-4585-b7a2-09fdcc9c37d9",
+      "userId": "1527c673-4900-462f-81f4-38a58ea76583",
+      "eventId": 2,
+      "stateId": 2,  
+      "number_doc": "4532",
+      "issue_date": "2022-10-01T19:11:50.653Z",
+      "amount": 500.00,
+      "period": "2022/10",
+      "refund_amount": 300.00,
+      "attachment": "/media/4532.pdf"
+    },
+    {
+      "id": "f5279a87-fb36-450b-9118-47f79fdc6ad0",
+      "userId": "1527c673-4900-462f-81f4-38a58ea76583",
+      "eventId": 1,
+      "stateId": 3,
+      "number_doc": "0980",
+      "issue_date": "2022-10-02T19:11:50.653Z",
+      "amount": 1000.00,
+      "period": "2022/10",
+      "refund_amount": 600.00,
+      "attachment": "/media/0980.pdf"
     }
   ]
 }

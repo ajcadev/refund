@@ -2,8 +2,6 @@ import { red } from "@radix-ui/colors";
 import { styled } from "../../styles";
 import { Button } from "../../styles/UI/Button";
 
-// export const Flex = styled('div', { display: 'flex' });
-
 export const SubmitButton = styled(Button, {
   '&[type="submit"]': {
     '&:disabled': {
@@ -18,45 +16,13 @@ export const SubmitButton = styled(Button, {
   }
 })
 
-// export const Label = styled('label', {
-//   display: 'block',
-//   marginTop: '1.5rem',
-
-//   variants: {
-//     variant: {
-//       checkbox: {
-//         display: 'flex',
-//         gap: 5,
-//         alignItems: 'center',
-//         width: 'none',
-//       }
-//     }
-//   }
-// })
-
-// export const Span = styled('span', {
-//   //base styles
-//   color: '$gray11',
-//   marginLeft: '0.5rem',
-  
-//   variants: {
-//     variant: {
-//       block: {
-//         display: 'block',
-//         marginBottom: '0.25rem',
-//         marginLeft: 0,
-//       }
-//     }
-//   }
-// })
-
 export const FormRefund = styled('form', {
   display: 'flex',
   flexDirection: 'column',
   gap: '1.25rem',
 
   'span': {
-    color: '$gray11',
+    color: '$violet9',
   }
 })
 
@@ -80,16 +46,30 @@ export const Label = styled('label', {
 })
 
 export const Input = styled('input', {
-  borderRadius: 6,
+  borderRadius: 4,
   padding: 8,
+  $$bordercolor: '$colors$violet7',
+  border: '1px solid $$bordercolor',
+  outline: 'none',
 
   '&[type="checkbox"]': {
     width: '1.25rem',
     height: '1.25rem',
   },
 
+
+  '&:not(textarea)': {
+    lineHeight: 1,
+    height: '2.25rem',
+  },
+
+  '&[type="file"]': {
+    fontSize: '0.9rem',
+    paddingTop: '0.35rem',
+  },
+
   '&:focus': {
     $$shadow: '$colors$violet8', 
-    boxShadow: '0 0 0 1px $$shadow'
+    boxShadow: '0 0 0 2px $$shadow',
   },
 })

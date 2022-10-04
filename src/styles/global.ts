@@ -15,7 +15,7 @@ export const globalStyles = globalCss({
   
   body: {
     lineHeight: '1.5',
-    backgroundColor: '$base-background',
+    backgroundColor: '#f1f5f9',
     color: '$base-text',
     '-webkit-font-smoothing': 'antialiased',
     font: '400 1rem Roboto, sans-serif',

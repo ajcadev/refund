@@ -15,7 +15,31 @@ const NoDependentSchema = z.object({
   numberDoc: z.string().min(1, 'Informe o número do documento'),
   issueDate: z.date().min(lowerDeadline, `Documento fora do prazo de ${MAXDAYSTOREQUESTREFUND}`).max(new Date(), 'Data posterior à data atual'),
   amount: z.number().positive('Informe um valor maior que 0'),
-  isDependent: z.literal(false),  
+  isDependent: z.literal(false),
+  file:
+  typeof window === "undefined" // this is required if your app rendered in server side, otherwise just remove the ternary condition
+    ? z.undefined()
+    : z
+        .instanceof(FileList)
+        .refine(file => file.length !== 0, {
+          message: "File is required",
+        })
+        .refine(
+          file => {
+            const fileType = file.item?.(0)?.type || "";
+            return fileType === "application/pdf";
+          },
+          {
+            message: "File must be in .pdf format",
+          }
+        )
+        .refine(
+          file => {
+            const fileSize = file.item?.(0)?.size || 0;
+            return fileSize <= 200000;
+          },
+          { message: "File size must be less than or equal to 200kb" }
+        ),
 })
 
 const DependentSchema = z.object({
@@ -24,7 +48,31 @@ const DependentSchema = z.object({
   issueDate: z.date().min(lowerDeadline, `Documento fora do prazo de ${MAXDAYSTOREQUESTREFUND}`).max(new Date(), 'Data posterior à data atual'),
   amount: z.number().positive('Informe um valor maior que 0'),
   isDependent: z.literal(true),
-  dependent: z.string().min(1, 'Informe o dependente'),  
+  dependent: z.string().min(1, 'Informe o dependente'),
+  file:
+  typeof window === "undefined" // this is required if your app rendered in server side, otherwise just remove the ternary condition
+    ? z.undefined()
+    : z
+        .instanceof(FileList)
+        .refine(file => file.length !== 0, {
+          message: "File is required",
+        })
+        .refine(
+          file => {
+            const fileType = file.item?.(0)?.type || "";
+            return fileType === "application/pdf";
+          },
+          {
+            message: "File must be in .pdf format",
+          }
+        )
+        .refine(
+          file => {
+            const fileSize = file.item?.(0)?.size || 0;
+            return fileSize <= 200000;
+          },
+          { message: "File size must be less than or equal to 200kb" }
+        ),  
 })
 
 const newRefundFormSchema = z.discriminatedUnion("isDependent", [
@@ -55,7 +103,7 @@ export function NewRefundModal({ events }: NewRefundModalProps){
       event: '1827'
     }
   })
-
+  
   async function handleCreateNewRefund(data: NewRefundFormSchemaType) {
     await new Promise(resolve => setTimeout(resolve, 2000));
     console.log(data);
@@ -64,7 +112,6 @@ export function NewRefundModal({ events }: NewRefundModalProps){
 
   const isDependent = watch('isDependent')
 
-  console.log(events)
   return(
     <DialogPortal>
       <DialogOverlay />
@@ -121,7 +168,7 @@ export function NewRefundModal({ events }: NewRefundModalProps){
                 {...register('numberDoc')}
                 aria-invalid={errors.numberDoc ? "true" : "false"} 
               />
-              {<p role="alert">{errors.numberDoc?.message}</p>}
+              {<p>{errors.numberDoc?.message}</p>}
             </Label>
             <Label>
               <span>Data de emissão</span>
@@ -131,7 +178,9 @@ export function NewRefundModal({ events }: NewRefundModalProps){
                 {...register('issueDate', { valueAsDate: true })}
               />
               {errors.issueDate && <p>Informe uma data válida</p>}
+              {<p>{errors.issueDate?.message}</p>}
             </Label>
+
             <Label>
               <span>Valor</span>
               <Input
@@ -142,6 +191,17 @@ export function NewRefundModal({ events }: NewRefundModalProps){
               />
               {errors.amount && <p>Informe um valor maior que zero.</p>}
             </Label>
+
+            <Label>
+              <span>Arquivo</span>
+              <Input
+                type="file"
+                {...register('file')}
+              />
+              {errors.file && <p>Informe um arquivo pdf.</p>}
+            </Label>
+
+
             <Label variant="checkbox">
               <Input
                 type="checkbox"
@@ -159,6 +219,7 @@ export function NewRefundModal({ events }: NewRefundModalProps){
                 />
               </Label>
             )}
+            {/* <pre>{JSON.stringify(watch())}</pre> */}
             <SubmitButton type="submit" disabled={isSubmitting} variant="green">Salvar</SubmitButton>
         </FormRefund>
         <DialogClose asChild>
@@ -170,3 +231,4 @@ export function NewRefundModal({ events }: NewRefundModalProps){
     </DialogPortal>
   )
 }
+
